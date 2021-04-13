@@ -1,6 +1,6 @@
 const all = {
     env: "DEV", 
-    token_key: "XYX",
+    token_key: "XYXX",
     dbConf:{
         master:{
             host: 'localhost',
@@ -11,7 +11,7 @@ const all = {
             connectionLimit: 10
         }
     },
-    googleDistanceApiKey:"AIzaSyBiF0gpF0ELqLdArISj-eDdSTVpiPxXgJc",
+    googleDistanceApiKey:"XX",
     googleDistanceApi:{
         // url: "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615,-73.9976592&key=AIzaSyBiF0gpF0ELqLdArISj-eDdSTVpiPxXgJc"
         url: "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric"
