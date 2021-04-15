@@ -73,7 +73,7 @@ let findNearByCabs = function(city_id, lat, long, funCallback){
                     destanceMat.forEach(function(value, i){
                         console.log("value: ", value);
                         results[i]["road_dis_km"] = value.elements[0].distance.value/1000;
-                        results[i]["road_time_min"] = value.elements[0].duration.value/1000;
+                        results[i]["road_time_min"] = value.elements[0].duration.value/60;
                     });
                     //first sort with the mimimum distance cab the sort on avg_rating
                     let sorted = _.orderBy(results, ["road_dis_km", "avg_rating"], ["asc","desc"]);
@@ -100,7 +100,6 @@ let findNearByCabs = function(city_id, lat, long, funCallback){
             }
         }
     })
-
 }
 
 module.exports= {
