@@ -4,6 +4,7 @@ var bodyParser = require("body-parser")
 var expressValidator = require('express-validator');
 var testrouter = require("./routers/test");
 let customerRouter = require("./routers/redyassist/customer");
+let driverRouter = require("./routers/redyassist/driver");
 let rateRouter = require("./routers/redyassist/rating");
 let cabRouter = require("./routers/redyassist/cabrouter");
 
@@ -25,6 +26,9 @@ app.use(function(req, res, next){
         next();
     }else if(req.url.indexOf("/customer/validateotp")> -1){
         next();
+    }
+    else if(req.url.indexOf("/driver/")> -1){
+        next();
     }else{
         readyassistMiddlware.validateToken(req, res,next);
     }
@@ -36,6 +40,7 @@ app.use("/api/test", testrouter);
 
 //readyassist
 app.use("/api/customer",customerRouter );
+app.use("/api/driver",driverRouter );
 app.use("/api/rate", rateRouter);
 app.use("/api/cab", cabRouter);
 
