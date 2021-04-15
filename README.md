@@ -15,9 +15,9 @@ Steps: 
                
             $ mysql -u root -p'mynewpassword' readyassist2 < readyassist.sql
 
-        3. Import this postman collection     <Provide the line here>
+        3. Import this postman collection     https://www.getpostman.com/collections/99eb30b0db81859079f1
 
-        
+
 3. The URL which work without Token      
 
             1. api/customer/register      
