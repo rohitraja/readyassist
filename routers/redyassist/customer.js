@@ -2,10 +2,11 @@ var express = require("express");
 var router = express.Router();
 var customerService = require("./../../services/readyassist/customerService");
 const async = require("async");
+const customerValidator = require("./../validators/customerValidator")
 // var test2 = require("../controllers/test2");
 
 
-router.post("/",function(req,res){
+router.post("/",customerValidator.validateBody, function(req,res){
         async.waterfall([
             function(callback){
                 let custData = req.body;
@@ -28,7 +29,7 @@ router.post("/",function(req,res){
         })
 });
 router.post("/sendotp", function(req, res){
-    customerService.sendOTP(req.body.mobile, function(err, response){
+    customerService.sendOTP(recustomerValidator.validateBody, q.body.mobile, function(err, response){
         if(err){
             res.status(500).json({msg: "Something went wrong"});
         }else{
@@ -36,7 +37,7 @@ router.post("/sendotp", function(req, res){
         }
     })
 });
-router.post("/validateotp", function(req, res){
+router.post("/validateotp", customerValidator.validateOTP, function(req, res){
     let reqObj = req.body;
     customerService.validateOTPForCustomer(reqObj, function(err, response){
         if(err){

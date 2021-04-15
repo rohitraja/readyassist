@@ -3,15 +3,24 @@
 const config = require("./../configs/redyassystConf");
 const jwt = require("jwt-simple");
 
+/**
+ * Desc generate OTP. It is defaulted to 1234. As OTP is not being sent to the customer. 
+ */
 let generateOTP = function(){
     // return Math.floor(1000 + Math.random() * 9000);
     return 1234;
 }
 
+
+/**
+ * Desc: Generate jwt token pased on customer_id or driver_id
+ * @param {JSON} val 
+ * @param {callback} callback 
+ */
 let generateTokenWithUid = function(val, callback) {
     val.days !== undefined && val.days !== null && val.days !== '' ? val.days = val.days : val.days = 30 ;
     let dateObj = new Date();
-    let expires = dateObj.setDate(dateObj.getDate() + val.days) ; // 7 days
+    let expires = dateObj.setDate(dateObj.getDate() + val.days) ; 
     let params = {exp : expires};
     if(val.customer_id !== undefined  && val.customer_id !== null && val.customer_id !== "") params.customer_id = val.customer_id; else val.customer_id = null;
     if(val.driver_id !== undefined && val.driver_id !== null && val.driver_id !== "" ) params.driver_id = val.driver_id ; else val.driver_id = null;
@@ -19,7 +28,11 @@ let generateTokenWithUid = function(val, callback) {
     callback (null, { token: token, expires: expires});
 }
 
-//Validate Token
+/**
+ * 
+ * @param {*} val 
+ * @param {*} callback 
+ */
 let validateUserToken = function(val, callback){
     if (val.token) {
         try {

@@ -1,6 +1,7 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser")
+var expressValidator = require('express-validator');
 var testrouter = require("./routers/test");
 let customerRouter = require("./routers/redyassist/customer");
 let rateRouter = require("./routers/redyassist/rating");
@@ -15,6 +16,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 app.set("port", process.env.PORT||4000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+app.use(expressValidator());
 
 
 // skip token validation for some the apis

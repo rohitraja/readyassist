@@ -30,7 +30,9 @@ let findNearByCabs = function(city_id, lat, long, funCallback){
 
     asyncLib.waterfall([
         function(callback){
-            cabModle.getCabInDistanceRange(mysql, city_id, 10, lat, long, function(err, response){
+            //get the cabs in the distance circle of config distance range. narrow down the google api calls. 
+            //It has the limit range to 100 source and destintation
+            cabModle.getCabInDistanceRange(mysql, city_id, config.distance_range, lat, long, function(err, response){
                 if(err){
                     callback(err);
                 }else{
@@ -40,6 +42,7 @@ let findNearByCabs = function(city_id, lat, long, funCallback){
         },
         function(result, callback){
             let driverIds = _.map(result,"driver_id");
+            //get the rating of above cab drivers. check only for the cabs avalilabe for the ride based on the status.
             ratingModel.getAvgRatingByDIds(mysql, driverIds,function(err, ratings){
                 console.log("ratings: ", ratings);
                 if(!err){
@@ -62,9 +65,20 @@ let findNearByCabs = function(city_id, lat, long, funCallback){
                     latlong.push(element.cur_long);
                     latLongs.push(latlong);
                 });
+                //call google api to get travel distance and time for cab to reach the destination. 
                 distanceFromSorsToDes(latLongs,lat, long).then((data)=>{
-                    console.log("distances: ", data);
-                    funCallback(null, data);
+                    let destanceMat = [].concat(data.rows);
+
+                    //merge the travel distance to the cabs
+                    destanceMat.forEach(function(value, i){
+                        console.log("value: ", value);
+                        results[i]["road_dis_km"] = value.elements[0].distance.value/1000;
+                        results[i]["road_time_min"] = value.elements[0].duration.value/1000;
+                    });
+                    //first sort with the mimimum distance cab the sort on avg_rating
+                    let sorted = _.orderBy(results, ["road_dis_km", "avg_rating"], ["asc","desc"]);
+                    
+                    funCallback(null, sorted);
                 })
                 .catch((reason)=>{
                     funCallback(new Error(reason));
@@ -78,7 +92,12 @@ let findNearByCabs = function(city_id, lat, long, funCallback){
             console.error("Error: ", err);
             funCallback(err);
         }else{
-            funCallback(err, result);
+            if(result.length <= 0){
+                funCallback(new Error("No cabs were found in rage of X Kms"));
+            }else{
+                //need to return only one search result. but showing the whole range just to see the rating.
+                funCallback(err, result);
+            }
         }
     })
 
